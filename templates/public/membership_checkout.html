@@ -1,0 +1,11 @@
+{% extends "public/base.html" %}
+{% from "includes/_formHelper.html" import render_user_form %}
+{% from "includes/_rowHelper.html" import middle_column %}
+
+{% block content %}
+    <h1>Membership - Checkout</h1>
+    <p>Enter your payment details to complete your purchase!</p>
+    {% call middle_column() %}
+        {{ render_user_form(form,"Purchase") }}
+    {% endcall %}
+{% endblock %}

@@ -1,0 +1,35 @@
+{% macro gym_slots_table(time_slots_by_day, render_slot, after_slots=None) %}
+    <table class="table">
+        <thead>
+            <tr>
+            {% for day in range(7) %}
+                <th>
+                    {{ day | format_day }}
+                    <br>
+                    <span class="small">
+                        {{ day | format_nearest_day(weekday_included=False) }}
+                    </span>
+                </th>
+            {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {% for day in range(7) %}
+                    <td>
+                        <ul class="list-unstyled">
+                            {% for time_slot in time_slots_by_day[day] %}
+                                <li class="mb-2">
+                                    {{ render_slot(time_slot) }}
+                                </li>
+                            {% endfor %}
+                            {% if after_slots != None %}
+                                {{ after_slots(day) }}
+                            {% endif %}
+                        </ul>
+                    </td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+{% endmacro %}

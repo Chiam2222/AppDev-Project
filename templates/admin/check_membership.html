@@ -1,0 +1,26 @@
+{% extends "admin/base.html" %}
+{% from "includes/_formHelper.html" import render_field, show_flashed_messages %}
+{% set active_page = "admin_check_membership" %}
+
+{% block content %}
+    <h1>Member List</h1>
+    <div class="container-fluid col-12">
+        <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Username</th>
+            <th scope="col">Membership Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for username in all_members %}
+          <tr>
+            <td>{{ username }}</td>
+            <td>{{ all_members[username] }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+{% endblock %}

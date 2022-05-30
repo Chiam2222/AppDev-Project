@@ -1,0 +1,81 @@
+{% macro tooltip(description) %}
+    <img
+        data-toggle="tooltip"
+        data-placement="right"
+        title="{{ description }}"
+        src="{{ url_for("static", filename="images/question_mark.png") }}"
+        style="height: 10px;"
+    />
+{% endmacro %}
+
+
+{% macro render_field(field, value=None) %}
+    <div class="form-group">
+        {{ field.label }}
+        {% if field.description %}
+            {{ tooltip(field.description) }}
+        {% endif %}
+        {# if the field is a radio field, its widget will have prefix_label=False #}
+        {% if field.widget.prefix_label == False %}
+            <ul class="list-unstyled list-inline">
+                {% for subfield in field %}
+                    <li class="list-inline-item">
+                        {{ subfield }}
+                        {{ subfield.label }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            {{ field(class="form-control text-center") }}
+        {% endif %}
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro render_user_form(form, title, button_text="", description="", show_flashes=True) %}
+    <div class="container-fluid border border-dark p-2">
+        <h1>{{ title }}</h1>
+
+        {% if show_flashes %}
+            {{ show_flashed_messages() }}
+        {% endif %}
+        {% if description != "" %}
+            <p>{{ description }}</p>
+        {% endif %}
+
+        {% if caller %}
+            {{ caller() }}
+        {% endif %}
+
+        <form method="POST" action="">
+            {% for field in form %}
+                {{ render_field(field) }}
+            {% endfor %}
+            {% if button_text == "" %}
+                <input type="submit" value="{{ title }}" class="btn btn-primary py-2"/>
+            {% else %}
+                <input type="submit" value="{{ button_text }}" class="btn btn-primary py-2"/>
+            {% endif %}
+        </form>
+    </div>
+{% endmacro %}
+
+{% macro show_flashed_messages() %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="list-unstyled">
+                {% for category, message in messages %}
+                    {% if category == "error" %}
+                        <li class="alert-danger">{{ message }}</li>
+                    {% elif category == "success" %}
+                        <li class="alert-success">{{ message }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+{% endmacro %}

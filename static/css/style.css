@@ -1,0 +1,13 @@
+.bg-color {
+    background-color: #ffffff !important;
+}
+
+.navbar .nav-item{
+    font-size: 1.35em;
+}
+
+
+
+.tooltip {
+    pointer-events: none;
+}

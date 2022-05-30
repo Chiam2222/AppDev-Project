@@ -1,0 +1,60 @@
+{% extends "public/base.html" %}
+{% set active_page="find_a_gym" %}
+{% set fill_page = True %}
+
+{% from "shared/includes/_gym_map.html" import map_head, map_content, map_scripts %}
+{% from "includes/_formHelper.html" import show_flashed_messages %}
+
+{% macro render_gym_details() %}
+    <div class="row">
+        <div class="col-12 d-flex justify-content-end">
+            <a id="gym_details_close_button" class="btn p-0 m-0 btn-light">
+                <span style="font-size: 1.5em;">x</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <h2 id="gym_details_name">some name</h2>
+            <ul class="list-group list-group-flush mb-4">
+                <li class="list-group-item">
+                    <span class="h4 pull-left">Address: </span>
+                    <span class="h4 font-weight-lighter" id="gym_details_address"></span>
+                </li>
+                <li class="list-group-item">
+                    <span class="h4 pull-left">Capacity Level: </span>
+                    <span class="h4 font-weight-lighter" id="gym_details_capacity_level"></span>
+                </li>
+                <li class="list-group-item">
+                    <span class="h4 font-weight-lighter text-break" id="gym_details_description"></span>
+                </li>
+            </ul>
+
+            <a id="gym_details_book" class="btn btn-dark py-1" href="{{ url_for("gym_timeslots", gym_id="") }}" role="button">Book</a>
+        </div>
+    </div>
+{% endmacro %}
+
+{% block head %}
+    {{ map_head() }}
+{% endblock %}
+
+{% block content %}
+    <h1>Find A Gym</h1>
+    {{ show_flashed_messages() }}
+    {{ map_content() }}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function show_details_callback(gymLocation) {
+            gym_details_div.find("#gym_details_name").text(gymLocation.name);
+            gym_details_div.find("#gym_details_address").text(gymLocation.address);
+            gym_details_div.find("#gym_details_description").text(gymLocation.description);
+            gym_details_div.find("#gym_details_capacity_level").text(gymLocation.capacityLevelName);
+            gym_details_div.find("#gym_details_book").attr("href", default_gyms_link + gymLocation.id); // default_gyms_link + id);
+        }
+    </script>
+    {{ map_scripts(gym_locations, form, render_gym_details, "show_details_callback") }}
+{% endblock %}

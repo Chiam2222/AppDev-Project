@@ -1,0 +1,68 @@
+{% extends "public/base.html" %}
+
+{% from "includes/_formHelper.html" import render_user_form %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-2"></div>
+        {% if current_user.get_membership().get_tier_name() != "NIL" %}
+            <div class="col-2"></div>
+        {% endif %}
+        <div class="col-4">
+            <div class="card border-primary mb-3" style="max-width: 25rem;">
+                <div class="card-header"><h1>Confirm Details</h1></div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            Gym: {{ gym_location.name }}
+                        </li>
+                        <li class="list-group-item">
+                            Address: {{ gym_location.address }}
+                        </li>
+                        <li class="list-group-item">
+                            Date: {{ time_slot.day | format_nearest_day }}
+                        </li>
+                        <li class="list-group-item">
+                            Timing: {{ time_slot | string }}
+                        </li>
+                        <li class="list-group-item">
+                            {% if current_user.get_membership().get_tier_name() != "NIL" %}
+                                <strike>
+                            {% endif %}
+                            Booking Fee: {{ "${:.2f}".format(time_slot.price) }}
+                            {% if current_user.get_membership().get_tier_name() != "NIL" %}
+                                </strike>
+                                <br>
+                                Free (membership perk)
+                            {% endif %}
+                        </li>
+                    </ul>
+                    <br>
+                    <p>
+                        <i>* Please ensure that the details above are correct.</i>
+                    </p>
+                    {% if current_user.get_membership().get_tier_name() != "NIL" %}
+                        <form method="POST" action="">
+                            <input type="submit" value="Confirm" class="btn btn-primary py-2"/>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+            <a class="" href="{{ url_for('gym_timeslots', gym_id=gym_location.id) }}" role="button">Back to Time Slots</a>
+        </div>
+        {% if current_user.get_membership().get_tier_name() == "NIL" %}
+            <div class="col-4">
+                {% call render_user_form(
+                    form,
+                    "Checkout",
+                    "Purchase"
+                ) %}
+                    <p>
+                        * You have to pay the booking fee ({{ "${:.2f}".format(time_slot.price) }}) unless you have a
+                        <a href="{{ url_for("membership_page") }}" class="text-info">membership.</a>
+                    </p>
+                {% endcall %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

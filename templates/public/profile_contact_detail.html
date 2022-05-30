@@ -1,0 +1,40 @@
+{% extends "public/base.html" %}
+{% from "includes/_formHelper.html" import show_flashed_messages %}
+
+
+{% block content %}
+{{ show_flashed_messages() }}
+<h1>{{ contact.get_first_name() }} {{ contact.get_last_name() }} Contact Form</h1>
+    <table class="table table-hover">
+        <tbody>
+            <tr>
+                <th scope="row"><b>First Name:</b></th>
+                <td>{{ contact.get_first_name() }}</td>
+                <th scope="row"><b>Last Name:</b></th>
+                <td>{{ contact.get_last_name() }}</td>
+            </tr>
+            <tr>
+                <th scope="row"><b>Phone:</b></th>
+                <td>{{ contact.get_phone_no() }}</td>
+                <th scope="row"><b>Location:</b></th>
+                <td>{{ contact.get_region() }}</td>
+            </tr>
+            <tr>
+                <th scope="row"><b>Category:</b></th>
+                <td>{{ contact.get_category() }}</td>
+                <th scope="row"></th>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row"><b>Message:</b></th>
+                <td colspan="3">{{ contact.get_reply() }}
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><b>Reply:</b></th>
+                <td colspan="3">{{ contact.get_admin_reply() }}</td>
+            </tr>
+        </tbody>
+      </table>
+<a class='btn btn-dark' href="{{ url_for('profile_contact_list') }}" role="button">Back</a>
+{% endblock %}

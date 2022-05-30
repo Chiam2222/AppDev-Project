@@ -1,0 +1,59 @@
+{% extends "admin/base.html" %}
+{% from "includes/_formHelper.html" import show_flashed_messages %}
+{% from "shared/includes/_gym_slots.html" import gym_slots_table %}
+
+{% set active_page = "admin_gyms" %}
+
+{% macro render_slot(time_slot) %}
+    <a
+        class="
+            btn py-2
+            {% if time_slot.available %}
+                btn-dark
+            {% else %}
+                btn-danger
+            {% endif %}
+        "
+
+        {% if time_slot.available %}
+            href="{{ url_for(
+                "admin_gym_slot_details",
+                gym_id=gym_location.id,
+                slot_id=time_slot.id
+            ) }}"
+        {% else %}
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Unavailable"
+
+            href="{{ url_for(
+                "admin_gym_slot_details",
+                gym_id=gym_location.id,
+                slot_id=time_slot.id
+            ) }}"
+        {% endif %}
+    >
+        {{ "{} (${:.2f})".format(time_slot.__str__(), time_slot.price)  }}
+    </a>
+{% endmacro %}
+
+{% macro render_add_button(day) %}
+    <li>
+        <a
+            class="btn btn-light btn-outline btn-outline-dark py-2"
+            href="{{ url_for("admin_gym_slot_add", day=day, gym_id=gym_location.id) }}"
+        >
+            Add
+        </a>
+    </li>
+{% endmacro %}
+
+{% block content %}
+    <h1>{{ gym_location.name }} Time Slots</h1>
+    {{ show_flashed_messages() }}
+    {{ gym_slots_table(
+        time_slots_by_day,
+        render_slot,
+        render_add_button
+    ) }}
+{% endblock %}

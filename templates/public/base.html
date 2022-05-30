@@ -1,0 +1,34 @@
+{% extends "shared/base.html" %}
+{% from "includes/_navbar.html" import nav_link %}
+
+{% set middle_navbar = [
+    {"id": "find_a_gym", "caption": "Find A Gym"},
+    {"id": "membership_page", "caption": "Membership"},
+    {"id": "faq", "caption": "FAQ"},
+] %}
+
+{% if current_user.is_authenticated %}
+    {% set right_navbar = [
+        {"id": "profile", "caption": current_user.username},
+    ] %}
+{% else %}
+    {% set right_navbar = [
+        {"id": "login", "caption": "Log In"},
+    ] %}
+{% endif %}
+
+{% set fill_page = fill_page | default(False) %}
+
+{% block body %}
+    <div class="container-fluid d-flex flex-column min-vh-100">
+        <div class="row">
+            {% include 'includes/_navbar.html' %}
+        </div>
+        <div class="row justify-content-center text-center flex-grow-1">
+            <div class="col-12 mt-3 flex-grow-1 {{ "d-flex flex-column" if fill_page }}">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

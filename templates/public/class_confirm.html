@@ -1,0 +1,25 @@
+{% extends "public/base.html" %}
+
+{% block content %}
+    <h1>{{ current_user.username }}'s Confirm Details</h1>
+    <p>We will send you the online class link to your email or phone number in a short while...</p>
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4">
+            <div class="container-fluid border border-dark p-2 mt-3">
+                <h3></h3>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                       Class: {{ class_name }}
+                    </li>
+                    <li class="list-group-item">
+                        Timing: {{ class_time }}
+                    </li>
+                </ul>
+                <p></p>
+                <a class="btn btn-dark" href="{{ url_for('class_details', slot_id=slot.get_id()) }}" role="button">Confirm</a>
+                <a class="btn btn-dark" href="{{ url_for('class_timeslots') }}" role="button">Back</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

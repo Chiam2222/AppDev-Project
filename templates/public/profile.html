@@ -1,0 +1,103 @@
+{% extends "public/base.html" %}
+{% from "includes/_formHelper.html" import render_field, show_flashed_messages %}
+{% from "includes/_rowHelper.html" import middle_column %}
+
+{% set active_page="profile" %}
+
+{% block content %}
+    {{ show_flashed_messages() }}
+
+    <h1>Hello, {{ current_user.username }}!</h1>
+    {% if current_user.is_admin %}
+        <a class="btn btn-light btn-outline btn-outline-dark mt-2 py-1" href="{{ url_for('admin_home') }}" role="button">Admin Page</a>
+    {% endif %}
+    <a class="btn btn-dark mt-2 py-1" href="{{ url_for('profile_contact_list', form_id=form_id) }}" role="button">View Contact</a>
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-5">
+            <div class="container-fluid border border-dark p-2 my-3">
+                <h3>Your Profile</h3>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                       USERNAME: {{ current_user.username }}
+                    </li>
+                    <li class="list-group-item">
+                        EMAIL: {{ current_user.email }}
+                    </li>
+                </ul>
+                <a class="btn btn-dark mt-2 py-1" href="{{ url_for("update_profile") }}" role="button">Update</a>
+                <a class="btn btn-danger mt-2 py-1" href="{{ url_for("logout") }}" role="button">Log Out</a>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="container-fluid border border-dark p-2 my-3">
+                <h3>Membership</h3>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                       TIER: {{ membership.get_tier_name() }}
+                    </li>
+                </ul>
+                {% if membership.get_tier_name()=="NIL" %}
+                    <a class="btn btn-dark mt-2 py-1" href="{{ url_for("membership_page") }}" role="button">Buy</a>
+                {% else %}
+                    <a class="btn btn-danger emt-2 py-1" href="{{ url_for("profile_membership") }}" role="button">Cancel Membership</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-5">
+            <div class="container-fluid border border-dark p-2 my-3">
+                <h3>Booked Gym Slots</h3>
+                {% if booked_gym_slots | length > 0 %}
+                    <ul class="list-group">
+                        {% for booked_slot in booked_gym_slots %}
+                            <li class="list-group-item">
+                                <p>{{ booked_slot.get_time_slot().day | format_day }}, {{ booked_slot.get_time_slot() | string }}, {{ booked_slot.get_gym_location() | string }}</p>
+                                <a class="btn btn-dark mt-1 py-1" href="{{ url_for('profile_gym_slot', booked_slot_id=booked_slot.id) }}" role="button">Details</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <br>
+                    {% if current_user.is_gym_maxed() == False %}
+                    <a class="btn btn-dark mt-1 py-1" href="{{ url_for('find_a_gym') }}" role="button">
+                        Add more gym-slots
+                    </a>
+                    {% endif %}
+                {% else %}
+                    <div class="container-fluid w-100 border p-2">
+                    <p class="m-0">You have not booked any time slots</p>
+                    <a class="btn btn-dark mt-3 py-1" href="{{ url_for('find_a_gym') }}" role="button">
+                        Find a Gym
+                    </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="container-fluid border border-dark p-2 my-3">
+                <h3>Registered Classes</h3>
+                {% if class_slots | length > 0 %}
+                    <ul class="list-group">
+                        {% for slot in class_slots %}
+                            <li class="list-group-item">
+                                <p>{{ slot.get_class_selected() }}, {{ slot.get_start_time() }} - {{ slot.get_end_time() }} , {{ slot.get_date() }}</p>
+                                <a class="btn btn-dark mt-1 py-1" href="{{ url_for('class_details', slot_id=slot.get_id()) }}" role="button">Details</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                <br>
+                <a class="btn btn-dark mt-1 py-1" href="{{ url_for('class_timeslots') }}" role="button">Add more class-slots</a>
+                {% else %}
+                <ul class="list-group">
+                    <li class="list-group-item">
+                    <p>You have not registered for any classes</p>
+                        <a class="btn btn-dark mt-1 py-1" href="{{ url_for('class_timeslots') }}" role="button">Sign Up Now</a>
+                    </li>
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

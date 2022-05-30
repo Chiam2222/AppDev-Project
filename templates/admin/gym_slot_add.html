@@ -1,0 +1,19 @@
+{% extends "admin/base.html" %}
+{% from "includes/_formHelper.html" import render_user_form %}
+{% from "includes/_rowHelper.html" import middle_column %}
+
+{% set active_page = "admin_gyms" %}
+
+{% block content %}
+    {% call middle_column() %}
+        {{ render_user_form(
+            form,
+            "Add Time Slot",
+            "Add",
+            "For {}".format(gym_location)
+        ) }}
+    {% endcall %}
+    {% call middle_column(row_classes=["mt-3"]) %}
+        <a href="{{ url_for("admin_gym_slots", gym_id=gym_location.id) }}">Back</a>
+    {% endcall %}
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "admin/base.html" %}
+{% from "includes/_formHelper.html" import render_user_form, tooltip, show_flashed_messages %}
+{% from "includes/_rowHelper.html" import middle_column %}
+
+{% set active_page = "admin_gyms" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            {{ show_flashed_messages() }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-4">
+            {{ render_user_form(
+                form,
+                "Update Time Slot",
+                "Update",
+                "{}, {} @ {}".format(gym_location, time_slot.day | format_nearest_day, time_slot),
+                show_flashes=False
+            ) }}
+            <a class="btn btn-danger py-1 my-3" href="{{ url_for("admin_gym_slot_delete", gym_id=gym_location.id, slot_id=time_slot.id) }}">Delete</a>
+            <br>
+            <a href="{{ url_for("admin_gym_slots", gym_id=gym_location.id) }}">Cancel</a>
+        </div>
+        <div class="col-6">
+            <h1>Users who booked</h1>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Booked Date {{ tooltip(
+                          "The exact date the user booked"
+                        ) }}</th>
+                        <th>Date Submitted {{ tooltip(
+                          "The date when the user submitted their booking"
+                        ) }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if booked_slots | length > 0 %}
+                        {% for booked_slot in booked_slots %}
+                            <tr>
+                                <td>{{ booked_slot.get_user().username }}</td>
+                                <td>{{ booked_slot.booked_date | format_date }}</td>
+                                <td>{{ booked_slot.date_submitted.strftime("%A, %d %B %Y, %H:%M") }}</td>
+                                <td>
+                                    <a
+                                        class="btn btn-danger mb-3 py-1 px-2"
+                                        href="{{ url_for(
+                                            "admin_booked_gym_slot_delete",
+                                            booked_slot_id=booked_slot.id,
+                                            next = url_for(
+                                                "admin_gym_slot_details",
+                                                gym_id=gym_location.id,
+                                                slot_id=time_slot.id
+                                            )
+                                        ) }}"
+                                        role="button"
+                                        onclick="return confirm(
+                                            'Are you sure you want to cancel {{ booked_slot.get_user().username }}\'s gym slot at {{ gym_location.name }}?'
+                                        );">Cancel</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4">
+                                No users have booked this time slot
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

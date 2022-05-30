@@ -1,0 +1,241 @@
+{#
+Context variables required:
+form (for searching)
+gym_locations
+#}
+
+{% macro map_head() %}
+    <script src='{{ url_for("static", filename="js/mapbox-gl.js") }}'></script>
+    <link href='{{ url_for("static", filename="css/mapbox-gl.css") }}' rel='stylesheet' />
+{% endmacro %}
+
+{% macro base_gym_details(render_gym_details) %}
+    <div id="gym_details">
+        <div class="container-fluid h-100 my-2 p-2 justify-content-center">
+            {{ render_gym_details() }}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro render_search_bar(gym_locations, form, render_extra_button=None) %}
+    <div id="search_container" class="h-100 flex-grow-1 d-flex flex-column">
+        <div class="container-fluid border-bottom border-dark my-2 p-2">
+            <form id="gym_search" method="GET" action="">
+                <input type="hidden" name="form" value="gym_search">
+                <div class="input-group mb-3">
+                    <div class="input-group-append">
+                        <button class="btn border border-dark py-0 px-2" type="submit" form="gym_search" style="width: 35px; opacity: 0.5">
+                            <img class="img-fluid" src="{{ url_for("static", filename="images/search_icon.png") }}">
+                        </button>
+                    </div>
+                    <input type="text" name="q" class="form-control border border-dark border-left-0 px-3"
+                           maxlength="{{ form.q.render_kw["maxlength"] }}"
+                           placeholder="Search for a gym location" value="{{ form.q.data }}">
+                    {% if render_extra_button != None %}
+                        {{ render_extra_button() }}
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+        <div class="d-flex flex-column h-100 border border-dark border-bottom-0 overflow-auto">
+            <div class="col-12 p-0">
+                <div class="w-100 position-absolute">
+                    <ul class="list-group w-100">
+                        {% for gym_location in gym_locations %}
+                            <li id="gym_search_result" class="list-group-item" style="cursor: pointer; "
+                                onclick='show_gym_details(gymLocations["{{ gym_location.id }}"])'
+                            >
+                                <h4>{{ gym_location.name }}</h4>
+                                <span>{{ gym_location.address }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro map_content() %}
+    <div class="row h-100 bg-light border-dark mb-3 mx-3">
+        <div class="col-4 h-100 d-flex flex-column border-right border-dark">
+            <div id="gyms_left_column" class="h-100"></div>
+        </div>
+        <div class="col-8 justify-content-center px-0 mx-0" class="">
+            <div class="container justify-content-center px-0 h-100 w-100" id="map">
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro map_scripts(gym_locations, form, render_gym_details, show_callback, render_extra_button=None) %}
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZnJhbmNpc3JhbHBoIiwiYSI6ImNranBmYnZqeTYzNnEzMW55N3ZjbTFrb3gifQ.hMFI1KvVsbv-i8u9CzIEUA';
+
+        const maxBounds = [
+            [103.58190743429236, 1.212637427806385],
+            [104.03094597295944, 1.4703247201509129]
+        ]
+
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            maxBounds: maxBounds,
+            center: [103.80750606322317, 1.3590906480512643],
+            zoom: 11,
+        });
+    </script>
+    <script>
+        class GymLocation {
+            constructor(id, name, description, address, lng, lat, capacityLevel, capacityLevelName) {
+                this.id = id;
+                this.name = name;
+                this.description = description;
+                this.address = address;
+                this.lng = lng;
+                this.lat = lat;
+                this.capacityLevel = capacityLevel;
+                this.capacityLevelName = capacityLevelName;
+
+                this.marker = new mapboxgl.Marker({
+                    scale: 1.5,
+                    color: this.get_marker_color(),
+                }).setLngLat([this.lng, this.lat]).addTo(map);
+
+                this.is_active = true;
+
+                const element = this.marker.getElement();
+                $(element).on("click", () => {
+                    if (this.active === true) {
+                        show_gym_details(this)
+                    }
+                });
+
+                this.activate();
+            }
+
+            activate() {
+                this.active = true;
+
+                const element = this.marker.getElement();
+                $(element).css("cursor", "pointer");
+            }
+
+            deactivate() {
+                this.active = false;
+
+                const element = this.marker.getElement();
+                $(element).css("cursor", "");
+            }
+
+            show_marker() {
+                const element = this.marker.getElement();
+                $(element).css("opacity", 1)
+            }
+
+            hide_marker() {
+                const element = this.marker.getElement();
+                $(element).css("opacity", 0.4)
+            }
+
+            get_marker_color() {
+                let color
+                switch (this.capacityLevel) {
+                    case 1:
+                        color = "#3cd677";
+                        break;
+                    case 2:
+                        color = "#fcd544";
+                        break;
+                    case 3:
+                        color = "#ff4a26";
+                        break;
+                }
+                return color;
+            }
+        }
+
+        const gymLocations = {}
+        {% for gym_location in gym_locations %}
+        gymLocations["{{ gym_location.id }}"] = new GymLocation(
+            "{{ gym_location.id }}",
+            "{{ gym_location.name }}",
+            "{{ gym_location.description }}",
+            "{{ gym_location.address }}",
+            {{ gym_location.coordinates["lng"] }},
+            {{ gym_location.coordinates["lat"] }},
+            {{ gym_location.capacity_level.value }},
+            "{{ gym_location.capacity_level.name }}"
+        );
+        {% endfor %}
+
+        function show_all_markers() {
+            for (const [_, gymLocation] of Object.entries(gymLocations)) {
+                gymLocation.show_marker();
+            }
+        }
+
+        function hide_all_markers(except_id) {
+            for (const [_, gymLocation] of Object.entries(gymLocations)) {
+                if (gymLocation.id !== except_id) {
+                    gymLocation.hide_marker();
+                } else {
+                    gymLocation.show_marker();
+                }
+            }
+        }
+
+        function deactivate_all_markers() {
+            for (const [_, gymLocation] of Object.entries(gymLocations)) {
+                gymLocation.deactivate();
+            }
+        }
+
+        function activate_all_markers() {
+            for (const [_, gymLocation] of Object.entries(gymLocations)) {
+                gymLocation.activate();
+            }
+        }
+    </script>
+    <script>
+        const selected_gym_id_key = "selected_gym_id";
+
+        const search_bar_div = $(`{{ render_search_bar(gym_locations, form, render_extra_button) }}`)
+        const gym_details_div = $(`{{ base_gym_details(render_gym_details) }}`)
+        const gyms_left_column = $("#gyms_left_column")
+
+        const default_gyms_link = gym_details_div.find("#gym_details_book").attr("href");
+
+        function render_left_column(div) {
+            gyms_left_column.empty();
+            gyms_left_column.append(div);
+        }
+
+        function show_search_bar() {
+            render_left_column(search_bar_div);
+        }
+
+        show_search_bar();
+
+        gyms_left_column.on("click", "#gym_details_close_button", function() {
+            delete sessionStorage[selected_gym_id_key];
+            show_search_bar();
+            show_all_markers();
+        });
+
+        function show_gym_details(gymLocation) {
+            {{ show_callback + "(gymLocation);" }}
+            hide_all_markers(gymLocation.id)
+
+            render_left_column(gym_details_div);
+
+            sessionStorage[selected_gym_id_key] = gymLocation.id
+        }
+
+        const selected_gym_id = sessionStorage[selected_gym_id_key];
+        console.log("selected_gym_id", selected_gym_id)
+        if (selected_gym_id !== undefined && gymLocations[selected_gym_id] !== undefined) {
+            show_gym_details(gymLocations[selected_gym_id]);
+        }
+    </script>
+{% endmacro %}

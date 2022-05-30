@@ -1,0 +1,28 @@
+{% extends "public/base.html" %}
+
+{% block content %}
+<h1>Contact Forms</h1>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">No.</th>
+                <th scope="col">Location</th>
+                <th scope="col">Category</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for contact in user_contact %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ contact.get_region() }}</td>
+                <td>{{ contact.get_category() }}</td>
+                <td><a class="btn btn-dark" href="{{ url_for('profile_contact_details', form_id=contact.get_id()) }}" role="button">
+                    View
+                </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+{% endblock %}

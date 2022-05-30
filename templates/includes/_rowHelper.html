@@ -1,0 +1,8 @@
+{% macro middle_column(row_classes=[], col_classes=[]) %}
+    <div class="row {{ " ".join(row_classes) }}">
+        <div class="col-4"></div>
+        <div class="col-4 {{ " ".join(col_classes) }}">
+            {{ caller() }}
+        </div>
+    </div>
+{% endmacro %}

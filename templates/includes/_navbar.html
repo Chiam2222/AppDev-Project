@@ -1,0 +1,43 @@
+{# middle_navbar = [
+    {"id": str, "caption": str},
+] #}
+{# right_navbar = [
+    {"id": str, "caption": str},
+]#}
+
+{% set brand = brand | default("Safe Fitness") %}
+{% set brand_url_id = brand_url_id | default("home") %}
+{% set active_page = active_page | default("home") %}
+
+{% macro nav_link(nav_item) %}
+    <li class="nav-item{{ " active" if nav_item["id"] == active_page }}">
+        <a class="nav-link" href="{{ url_for(nav_item["id"]) }}">{{ nav_item["caption"] }}</a>
+    </li>
+{% endmacro %}
+
+<nav class="navbar navbar-expand-md bg-dark navbar-dark sticky-top pb-2 pt-2 container-fluid position-sticky">
+    <!-- Brand -->
+    <div class="">
+        <a class="navbar-brand mr-auto" href="{{ url_for(brand_url_id) }}">{{ brand }}</a>
+    </div>
+
+    <!-- Toggler -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Links -->
+    <div class="collapse navbar-collapse" id="navbarToggler">
+        <ul class="navbar-nav row mx-auto">
+            {% for nav_item in middle_navbar %}
+                {{ nav_link(nav_item) }}
+            {% endfor %}
+        </ul>
+
+        <ul class="navbar-nav">
+            {% for nav_item in right_navbar %}
+                {{ nav_link(nav_item) }}
+            {% endfor %}
+        </ul>
+    </div>
+</nav>

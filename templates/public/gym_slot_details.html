@@ -1,0 +1,35 @@
+{% extends "public/base.html" %}
+
+{% from "includes/_formHelper.html" import show_flashed_messages %}
+
+{% block content %}
+    <h1>Booked Slot For {{ gym_location.name }}</h1>
+    {{ show_flashed_messages() }}
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4">
+            <div class="container-fluid border border-dark p-2 mt-3">
+                <h3>Details</h3>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        Address: {{ gym_location.address }}
+                    </li>
+                    <li class="list-group-item">
+                        Date: {{ booked_slot.booked_date | format_date}}
+                    </li>
+                    <li class="list-group-item">
+                        Timing: {{ time_slot | string }}
+                    </li>
+                    <li class="list-group-item">
+                        Amount Paid: {{ "${:.2f}".format(booked_slot.amount_paid) }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br>
+    <a class="btn btn-danger mb-3 py-1 px-2" href="{{ url_for('profile_gym_slot_delete', booked_slot_id=booked_slot.id)}}"
+       role="button" onclick="return confirm('Are you sure you want to cancel your gym slot at {{gym_location.name}}?');">Cancel Slot</a>
+    <br>
+    <a href="{{ url_for('profile') }}" role="button">Back to Profile</a>
+{% endblock %}

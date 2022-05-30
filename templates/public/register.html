@@ -1,0 +1,30 @@
+{% extends "public/base.html" %}
+{% from "includes/_formHelper.html" import render_user_form %}
+{% from "includes/_rowHelper.html" import middle_column %}
+
+{% set active_page="login" %}
+
+{% block content %}
+    {% call middle_column() %}
+        {{ render_user_form(form, "Register") }}
+    {% endcall %}
+    {% call middle_column(row_classes=["mt-3"]) %}
+        <p class="m-0">Already have an account?</p>
+        <a href="{{ url_for("login") }}">Log In</a>
+    {% endcall %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        const $password = $("#password");
+        const $confirm_password = $("#confirm_password")
+
+        $confirm_password.on("input", function () {
+            if ($password.val() !== $(this).val()) {
+                $(this)[0].setCustomValidity("Password must match");
+            } else {
+                $(this)[0].setCustomValidity("");
+            }
+        })
+    </script>
+{% endblock %}

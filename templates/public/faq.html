@@ -1,0 +1,68 @@
+{% extends "public/base.html" %}
+{% set active_page="faq" %}
+
+{% block content %}
+    <div class="container-fluid col-8 pb-4">
+        <h1>FAQ</h1>
+        <br>
+        <div class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="icon"></div>
+            <h4>Where is my nearest Safe Fitness location?</h4>
+            <p>
+                You can visit our <a class="text-info" href="{{ url_for('find_a_gym') }}" role="button">Find a Gym</a> page to find a convenient location near you!
+            </p>
+        </div>
+        <br>
+        <div class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="icon"></div>
+            <h4>How do I provide feedback about my membership experience?</h4>
+            <p>
+                To give feedback, please <a class="text-info" href="{{ url_for('contact') }}" role="button">click here</a>. Completing this form ensures that both your
+                local Safe Fitness gym and our corporate customer service team get your message.
+            </p>
+        </div>
+        <br>
+        <div class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="icon"></div>
+            <h4>How much does it cost for a membership?</h4>
+            <p>
+                Rates vary based on location, amenities, and membership type.
+                Because there are often offers, discounts, promotions and programs
+                that are happening that may affect your membership price,
+                for the most accurate information, please contact a nearby location.
+                We're looking forward to meeting you!
+            </p>
+        </div>
+        <br>
+        <div class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="icon"></div>
+            <h4>When can I use a gym that isn't my home gym?</h4>
+            <p>
+                After 30 days of membership, you are eligible to access
+                any of our thousands of gyms worldwide. We recommend that
+                you verify with your home gym that your anywhere access has
+                been activated before visiting another gym.
+            </p>
+        </div>
+        <br>
+        <div class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="icon"></div>
+            <h4>Where can I learn about membership specials like class schedules, gym locations, and other local infomation?</h4>
+            <p>
+                You can look them up on our <a class="text-info" href="{{ url_for('membership_page') }}" role="button">Membership</a> page.
+                You could also contact the gym directly.
+            </p>
+        </div>
+        <br>
+        <div class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="icon"></div>
+            <h4>Are you hiring?</h4>
+            <p>
+                Most likely, yes! If you're interested in a position at one of our gyms,
+                please <a class="text-info" href="{{ url_for('find_a_gym') }}" role="button">contact them</a> to inquire about job opportunities.
+            </p>
+        </div>
+        <br>
+        <a class="btn btn-dark" href="{{ url_for("contact") }}" role="button">Contact Us</a>
+    </div>
+{% endblock %}

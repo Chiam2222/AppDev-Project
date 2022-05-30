@@ -1,0 +1,46 @@
+{% extends "public/base.html" %}
+{% from "includes/_formHelper.html" import show_flashed_messages %}
+{% from "shared/includes/_gym_slots.html" import gym_slots_table %}
+
+{% set active_page = "find_a_gym" %}
+
+{% macro render_slot(time_slot) %}
+    <a
+        class="
+            btn py-2
+            {% if time_slot.available and time_slot.id not in booked_time_slot_ids %}
+                btn-dark
+            {% else %}
+                {% if time_slot.id in booked_time_slot_ids  %}
+                    btn-warning
+                {% else %}
+                    btn-danger
+                {% endif %}
+            {% endif %}
+        "
+
+        {% if time_slot.available and time_slot.id not in booked_time_slot_ids %}
+            href="{{ url_for(
+                "gym_confirm",
+                gym_id=gym_location.id,
+                slot_id=time_slot.id
+            ) }}"
+        {% else %}
+            data-toggle="tooltip"
+            data-placement="top"
+            {% if time_slot.id in booked_time_slot_ids  %}
+                title="You already booked this time slot"
+            {% else %}
+                title="Unavailable"
+            {% endif %}
+        {% endif %}
+    >
+        {{ time_slot.__str__() }}
+    </a>
+{% endmacro %}
+
+{% block content %}
+    <h1>{{ gym_location.name }} Time Slots</h1>
+    {{ show_flashed_messages() }}
+    {{ gym_slots_table(time_slots_by_day, render_slot) }}
+{% endblock %}

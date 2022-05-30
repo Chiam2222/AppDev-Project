@@ -1,0 +1,44 @@
+{% extends "admin/base.html" %}
+{% from "includes/_formHelper.html" import render_field, show_flashed_messages %}
+{% set active_page = "admin_contact_form_details" %}
+
+{% block content %}
+    <h1>{{ contact.get_first_name() }} {{ contact.get_last_name() }} Contact Form</h1>
+    <div class="container-fluid col-11">
+        <table class="table table-hover">
+        <tbody>
+            <tr>
+                <th scope="row"><b>First Name:</b></th>
+                <td>{{ contact.get_first_name() }}</td>
+                <th scope="row"><b>Last Name:</b></th>
+                <td>{{ contact.get_last_name() }}</td>
+            </tr>
+            <tr>
+                <th scope="row"><b>Phone:</b></th>
+                <td>{{ contact.get_phone_no() }}</td>
+                <th scope="row"><b>Location:</b></th>
+                <td>{{ contact.get_region() }}</td>
+            </tr>
+            <tr>
+                <th scope="row"><b>Category:</b></th>
+                <td>{{ contact.get_category() }}</td>
+                <th scope="row"></th>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row"><b>Message:</b></th>
+                <td colspan="3">{{ contact.get_reply() }}
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><b>Reply:</b></th>
+                <td colspan="3"><form method="POST" action="" id="replyform">{{ render_field(form.reply) }}</form></td>
+                {{ show_flashed_messages() }}
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    <input type="submit" class="btn btn-primary" form="replyform" value="Reply"><br>
+    <br>
+    <a href="{{ url_for("admin_contact_forms") }}" role="button">Back</a>
+{% endblock %}

@@ -1,0 +1,207 @@
+{% extends "admin/base.html" %}
+{% set active_page="admin_gyms" %}
+{% set fill_page = True %}
+
+{% from "shared/includes/_gym_map.html" import map_head, map_content, map_scripts, base_gym_details %}
+{% from "includes/_formHelper.html" import render_field, show_flashed_messages %}
+
+{% macro base_gym_form(form_name, submit_value, render_extra=None) %}
+    <div class="row">
+        <div class="col-12 d-flex justify-content-end">
+            <a id="gym_details_close_button" class="btn p-0 m-0 btn-light">
+                <span style="font-size: 1.5em;">x</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <form action="" method="POST">
+                <input type="hidden" name="form" value="{{ form_name }}">
+                {{ gym_form.id() }}
+                {{ gym_form.lng() }}
+                {{ gym_form.lat() }}
+                {{ render_field(gym_form.name) }}
+                {{ render_field(gym_form.address) }}
+                {{ render_field(gym_form.capacity_level) }}
+                {{ render_field(gym_form.description) }}
+                <input type="submit" value="{{ submit_value }}" class="btn btn-primary py-1" id="gym_form_submit"/>
+                {% if render_extra != None %}
+                    {{ render_extra() }}
+                {% endif %}
+            </form>
+        </div>
+    </div>
+{% endmacro %}
+
+
+
+{% macro update_gym_extra() %}
+    <a id="gym_details_delete" class="btn btn-danger py-1" href="{{ default_delete_link }}">
+        Delete
+    </a>
+    <div class="d-flex mt-2 mb-0 justify-content-center">
+        <a id="gym_details_slots" class="btn btn-light btn-outline btn-outline-dark py-0" href="{{ default_slots_link }}">
+            Manage time slots
+        </a>
+    </div>
+{% endmacro %}
+
+{% macro render_update_gym() %}
+    {{ base_gym_form("gym_update", "Update", update_gym_extra) }}
+{% endmacro %}
+
+{% macro render_gym_details() %}
+    {{ render_update_gym() }}
+{% endmacro %}
+
+
+
+{% macro add_gym_extra() %}
+    <p id="choose_location_message">
+        <i>* You must choose a location by clicking on the map to complete this form</i>
+    </p>
+    <p id="change_location_message" class="mt-2 mb-0">
+        <i>* Click on the map to choose a different location</i>
+    </p>
+{% endmacro %}
+
+{% macro render_add_gym() %}
+    {{ base_gym_form("gym_add", "Add Gym", add_gym_extra) }}
+{% endmacro %}
+
+
+
+{% macro render_extra_button() %} {# extra button next to search bar #}
+    <button
+        class="btn btn-light btn-outline btn-outline-dark my-0 mx-1 py-2"
+        type="button"
+        onclick="show_add_gym()"
+    >Add Gym</button>
+{% endmacro %}
+
+{% block head %}
+    {{ map_head() }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            {% if get_flashed_messages() %}
+                {{ show_flashed_messages() }}
+            {% else %}
+                <h1>GYM ADMIN</h1>
+            {% endif %}
+        </div>
+    </div>
+    {{ map_content() }}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        {% if gym_added != None %}
+            sessionStorage["selected_gym_id"] = "{{ gym_added.id }}";
+        {% endif %}
+    </script>
+    <script>
+        const default_delete_link = "{{ default_delete_link }}";
+        const default_slots_link = "{{ default_slots_link }}"
+        function show_callback(gymLocation) {
+            // Hidden Values
+            gym_details_div.find("#id").val(gymLocation.id);
+            gym_details_div.find("#lng").val(gymLocation.lng);
+            gym_details_div.find("#lat").val(gymLocation.lat);
+
+            // Displayed Values
+            gym_details_div.find("#name").val(gymLocation.name);
+            gym_details_div.find("#description").val(gymLocation.description);
+            gym_details_div.find("#address").val(gymLocation.address);
+            gym_details_div.find("#capacity_level").val(gymLocation.capacityLevel);
+
+            gym_details_div.find("#gym_details_delete").attr("href", default_delete_link.replace("X", gymLocation.id))
+            gym_details_div.find("#gym_details_slots").attr("href", default_slots_link.replace("X", gymLocation.id))
+        }
+    </script>
+    {{ map_scripts(gym_locations, form, render_gym_details, "show_callback", render_extra_button) }}
+    <script>
+        class AddGymState {
+            constructor() {
+                this.is_active = false;
+                this.marker = new mapboxgl.Marker({
+                    scale: 1.5,
+                    color: "#03bafc",
+                });
+            }
+
+            activate() {
+                this.is_active = true;
+
+                hide_all_markers();
+                deactivate_all_markers();
+            }
+
+            deactivate() {
+                this.is_active = false;
+                this.hide_marker();
+
+                show_all_markers();
+                activate_all_markers();
+            }
+
+            hide_marker() {
+                this.marker.remove();
+            }
+
+            change_marker_location(lng, lat) {
+                this.hide_marker();
+                this.marker.setLngLat([lng, lat]).addTo(map);
+            }
+        }
+
+        let state = new AddGymState();
+
+        gyms_left_column.on("click", "#gym_details_close_button", function() {
+            if (state.is_active === true) {
+                state.deactivate();
+            }
+        })
+
+        const gym_add_div = $(`{{ base_gym_details(render_add_gym) }}`)
+        if (gym_add_div.find("#id") !== "-1") {
+            gym_add_div.find("#id").val("-1")
+
+            gym_add_div.find("#name").val("");
+            gym_add_div.find("#description").val("");
+            gym_add_div.find("#address").val("");
+            gym_add_div.find("#capacity_level").val("1");
+        }
+
+        function show_add_gym() {
+            console.log(state.is_active)
+            if (state.is_active === false) {
+                state.activate();
+
+                gym_add_div.find("#gym_form_submit").hide();
+                gym_add_div.find("#change_location_message").hide();
+                gym_add_div.find("#choose_location_message").show();
+
+                render_left_column(gym_add_div);
+            }
+        }
+
+        map.on("click", function(e) {
+            if (state.is_active === true) {
+                const {lng, lat} = e.lngLat
+
+                state.change_marker_location(lng, lat)
+
+                gym_add_div.find("#lng").val(lng);
+                gym_add_div.find("#lat").val(lat);
+
+                gym_add_div.find("#gym_form_submit").show();
+                gym_add_div.find("#change_location_message").show();
+                gym_add_div.find("#choose_location_message").hide();
+            }
+        });
+    </script>
+{% endblock %}

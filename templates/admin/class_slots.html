@@ -1,0 +1,40 @@
+{% extends "admin/base.html" %}
+{% from "includes/_formHelper.html" import render_field, show_flashed_messages %}
+{% set active_page = "admin_class_slots" %}
+
+{% block content %}
+    <h1>Registered Class Slots</h1>
+    <div class="container-fluid col-12">
+        <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Username</th>
+            <th scope="col">Classes</th>
+            <th scope="col">Timings</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for username in all_classes %}
+        {% with class_slots = all_classes[username] %}
+            {% for class_slot in class_slots %}
+                {% if class_slot.get_type() == "class" %}
+                  <tr>
+                    <td>{{ username }}</td>
+                    <td>{{ class_slot.get_class_selected() }}</td>
+                    <td>{{ class_slot.get_start_time()}} - {{ class_slot.get_end_time()}}</td>
+                    <td><a class="btn btn-danger mb-3 py-1 px-2" href="{{ url_for('admin_class_slots_delete', slot_id=class_slot.get_id())}}" role="button" onclick="return confirm('Are you sure you want to delete {{ username }} {{class_slot.get_class_selected()}} class slot ?');">Cancel Slot</a></td>
+                  </tr>
+                {% else %}
+                  <tr>
+                    <td>{{ username }}</td>
+                    <td>No class registered</td>
+                    <td>-----</td>
+                  </tr>
+                {% endif %}
+            {% endfor %}
+        {% endwith %}
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "shared/base.html" %}
+
+{% set brand = "Safe Fitness Admin" %}
+{% set brand_url_id = "admin_home" %}
+{% set middle_navbar = [
+    {"id": "admin_gyms", "caption": "Gyms"},
+    {"id": "admin_contact_forms", "caption": "Contact Forms"},
+    {"id": "admin_class_slots", "caption": "Class Slots"},
+    {"id": "admin_check_membership", "caption": "Check Member"},
+] %}
+{% set right_navbar = [
+    {"id": "home", "caption": "Home"},
+] %}
+
+{% set fill_page = fill_page | default(False) %}
+
+{% block body %}
+    <div class="container-fluid d-flex flex-column min-vh-100">
+        <div class="row">
+            {% include 'includes/_navbar.html' %}
+        </div>
+        <div class="row justify-content-center text-center flex-grow-1">
+            <div class="col-12 mt-3 flex-grow-1 {{ "d-flex flex-column" if fill_page }}">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

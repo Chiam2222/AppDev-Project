@@ -1,0 +1,73 @@
+{% extends "public/base.html" %}
+
+{% block content %}
+<h1>Classes Time Slots</h1>
+<p></p>
+<table class="table table-striped">
+  <tr>
+    <th>Timings</th>
+    <th>Monday</th>
+    <th>Tuesday</th>
+    <th>Wednesday</th>
+    <th>Thursday</th>
+    <th>Friday</th>
+  </tr>
+  <tr>
+    <td>1000 - 1100</td>
+    <td><a class="btn btn-dark" href="{{ url_for('class_confirm', class_name='Yoga', class_time='1000 - 1100') }}" role="button">Yoga</a></td>
+    <td><a class="btn btn-dark" href="{{ url_for('class_confirm', class_name='Circuit', class_time='1000 - 1100') }}" role="button">Circuit</a></td>
+    <td><a class="btn btn-dark" href="{{ url_for('class_confirm', class_name='Hardcore', class_time='1000 - 1100') }}" role="button">Hardcore</a></td>
+    <td><a class="btn btn-dark" href="{{ url_for('class_confirm', class_name='Zumba', class_time='1000 - 1100') }}" role="button">Zumba</a></td>
+    <td><a class="btn btn-dark" href="{{ url_for('class_confirm', class_name='Yoga', class_time='1000 - 1100') }}" role="button">Yoga</a></td>
+  </tr>
+  <tr>
+    <td>1100 - 1200</td>
+    <td><a class="btn btn-light" href="{{ url_for('class_confirm', class_name='Hardcore', class_time='1100 - 1200') }}" role="button">Hardcore</a></td>
+    <td><a class="btn btn-light" href="{{ url_for('class_confirm', class_name='Yoga', class_time='1100 - 1200') }}" role="button">Yoga</a></td>
+    <td><a class="btn btn-light" href="{{ url_for('class_confirm', class_name='Zumba', class_time='1100 - 1200') }}" role="button">Zumba</a></td>
+    <td><a class="btn btn-light" href="{{ url_for('class_confirm', class_name='Circuit', class_time='1100 - 1200') }}" role="button">Circuit</a></td>
+    <td><a class="btn btn-light" href="{{ url_for('class_confirm', class_name='Hardcore', class_time='1100 - 1200') }}" role="button">Hardcore</a></td>
+  </tr>
+  <tr>
+    <td>1200 - 1300</td>
+    <td><a class="btn btn-dark" href="{{ url_for('class_confirm', class_name='Circuit', class_time='1200 - 1300') }}" role="button">Circuit</a></td>
+    <td><a class="btn btn-dark" href="{{ url_for('class_confirm', class_name='Zumba', class_time='1200 - 1300') }}" role="button">Zumba</a></td>
+    <td><a class="btn btn-dark" href="{{ url_for('class_confirm', class_name='Yoga', class_time='1200 - 1300') }}" role="button">Yoga</a></td>
+    <td><a class="btn btn-dark" href="{{ url_for('class_confirm', class_name='Hardcore', class_time='1200 - 1300') }}" role="button">Hardcore</a></td>
+    <td><a class="btn btn-dark" href="{{ url_for('class_confirm', class_name='Zumba', class_time='1200 - 1300') }}" role="button">Zumba</a></td>
+  </tr>
+  <tr>
+    <td>1300 - 1400</td>
+    <td><a class="btn btn-light" href="{{ url_for('class_confirm', class_name='Hardcore', class_time='1300 - 1400') }}" role="button">Hardcore</a></td>
+    <td><a class="btn btn-light" href="{{ url_for('class_confirm', class_name='Circuit', class_time='1300 - 1400') }}" role="button">Circuit</a></td>
+    <td><a class="btn btn-light" href="{{ url_for('class_confirm', class_name='Zumba', class_time='1300 - 1400') }}" role="button">Zumba</a></td>
+    <td><a class="btn btn-light" href="{{ url_for('class_confirm', class_name='Yoga', class_time='1300 - 1400') }}" role="button">Yoga</a></td>
+    <td><a class="btn btn-light" href="{{ url_for('class_confirm', class_name='Circuit', class_time='1300 - 1400') }}" role="button">Circuit</a></td>
+  </tr>
+  <tr>
+    <td>1400 - 1500</td>
+    <td><a class="btn btn-dark" href="{{ url_for('class_confirm', class_name='Yoga', class_time='1400 - 1500') }}" role="button">Yoga</a></td>
+    <td><a class="btn btn-dark" href="{{ url_for('class_confirm', class_name='Hardcore', class_time='1400 - 1500') }}" role="button">Hardcore</a></td>
+    <td><a class="btn btn-dark" href="{{ url_for('class_confirm', class_name='Circuit', class_time='1400 - 1500') }}" role="button">Circuit</a></td>
+    <td><a class="btn btn-dark" href="{{ url_for('class_confirm', class_name='Zumba', class_time='1400 - 1500') }}" role="button">Zumba</a></td>
+    <td><a class="btn btn-dark" href="{{ url_for('class_confirm', class_name='Yoga', class_time='1400 - 1500') }}" role="button">Yoga</a></td>
+  </tr>
+  <tr>
+    <td>1500 - 1600</td>
+    <td><a class="btn btn-light" href="{{ url_for('class_confirm', class_name='Circuit', class_time='1500 - 1600') }}" role="button">Circuit</a></td>
+    <td><a class="btn btn-light" href="{{ url_for('class_confirm', class_name='Zumba', class_time='1500 - 1600') }}" role="button">Zumba</a></td>
+    <td><a class="btn btn-light" href="{{ url_for('class_confirm', class_name='Yoga', class_time='1500 - 1600') }}" role="button">Yoga</a></td>
+    <td><a class="btn btn-light" href="{{ url_for('class_confirm', class_name='Hardcore', class_time='1500 - 1600') }}" role="button">Hardcore</a></td>
+    <td><a class="btn btn-light" href="{{ url_for('class_confirm', class_name='Zumba', class_time='1500 - 1600') }}" role="button">Zumba</a></td>
+  </tr>
+  <tr>
+    <td>1600 - 1700</td>
+    <td><a class="btn btn-dark" href="{{ url_for('class_confirm', class_name='Yoga', class_time='1600 - 1700') }}" role="button">Yoga</a></td>
+    <td><a class="btn btn-dark" href="{{ url_for('class_confirm', class_name='Circuit', class_time='1600 - 1700') }}" role="button">Circuit</a></td>
+    <td><a class="btn btn-dark" href="{{ url_for('class_confirm', class_name='Hardcore', class_time='1600 - 1700') }}" role="button">Hardcore</a></td>
+    <td><a class="btn btn-dark" href="{{ url_for('class_confirm', class_name='Zumba', class_time='1600 - 1700') }}" role="button">Zumba</a></td>
+    <td><a class="btn btn-dark" href="{{ url_for('class_confirm', class_name='Yoga', class_time='1600 - 1700') }}" role="button">Yoga</a></td>
+  </tr>
+</table>
+{% endblock %}
+

@@ -1,0 +1,115 @@
+{% extends "public/base.html" %}
+
+{% block content %}
+<style>
+  .img-hover-zoom {
+  width: 620px; /* [1.1] Set it as per your need */
+  height: auto;
+  overflow: hidden; /* [1.2] Hide the overflowing of child elements */
+}
+
+.img-hover-zoom img {
+  transition: transform .5s ease;
+  max-width: 100%;
+}
+
+/* [3] Finally, transforming the image when container gets hovered */
+.img-hover-zoom:hover img {
+  transform: scale(1.5);
+}
+
+.caption {
+    background-color: rgba(50, 50, 50, 0.6);
+    border-width: 3px !important;
+}
+</style>
+    <h1>Safe Fitness</h1>
+    <p>Safety is our upmost priority!</p>
+<div id="carouselExampleIndicators" class="d-block w-50 mx-auto carousel slide" data-ride="carousel">
+  <ol class="carousel-indicators">
+    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+  </ol>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img class="d-block w-100" src='{{ url_for("static", filename="images/gym1.jpeg") }}' alt="First slide">
+      <div class="carousel-caption d-none d-md-block">
+        <div class="border border-dark caption">
+          <h3 class="text-white">Welcome to Safe Fitness!</h3>
+          <p>Our passion is to keep you safe.</p>
+        </div>
+  </div>
+    </div>
+    <div class="carousel-item">
+      <img style="filter: brightness(80%);" class="d-block w-100" src='{{ url_for("static", filename="images/gym4.jpg") }}' alt="Second slide">
+      <div class="carousel-caption d-none d-md-block">
+        <div class="border border-dark caption">
+          <h3 class="text-white">We have the facilities to get you in shape!</h3>
+          <p>All the facilities to ensure you are at your best!</p>
+        </div>
+  </div>
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100" src='{{ url_for("static", filename="images/gym5.jpg") }}' alt="Third slide">
+      <div class="carousel-caption d-none d-md-block">
+        <div class="border border-dark caption">
+          <h3 class="text-white">We ensure that our gyms are extra clean!</h3>
+          <p>We have measures to prevent Covid-19 from spreading!</p>
+        </div>
+  </div>
+    </div>
+  </div>
+  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+<br>
+<hr style="width:60%; background-color:#a9a9a9">
+<br>
+<div class="d-flex p-2">
+  <div class="img-hover-zoom" style="float: left;">
+    <a href='{{ url_for("membership_page") }}'><img src='{{ url_for("static", filename="images/gymMembership.jpg") }}'></a>
+    <div>
+      <div></div>
+    </div>
+  </div>
+
+  <div class="img-hover-zoom" style="float: left;">
+    <a href='{{ url_for("find_a_gym") }}'><img src='{{ url_for("static", filename="images/gymfind.png") }}'></a>
+  </div>
+
+  <div class="img-hover-zoom" style="float: left;">
+    <a href='{{ url_for("faq") }}'><img src='{{ url_for("static", filename="images/FAQ.png") }}'></a>
+  </div>
+</div>
+<br>
+<hr style="width:60%; background-color:#a9a9a9">
+<br>
+  <h1>Healthier Place at Safe Fitness</h1>
+<div class="row ">
+        <div class="col-3"></div>
+        <div class="col-6 pb-4">
+            <p>Get to a healthier place at Safe Fitness!</p>
+            <p>
+                Our friendly, professional staff is trained to help you along your fitness journey,
+            no matter how much support you need.
+            </p>
+            <p>
+                Membership includes a free, no-pressure fitness consultation, global access to more than 3,000 gyms, and always open 24/7 convenience.
+            All in a welcoming club and supportive member community.
+            </p>
+            <p>Let’s get started! Visit during staffed hours or call for an appointment today!</p>
+          </p>
+        </div>
+    </div>
+
+
+<br>
+
+{% endblock %}

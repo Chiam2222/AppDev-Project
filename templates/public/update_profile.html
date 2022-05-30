@@ -1,0 +1,14 @@
+{% extends "public/base.html" %}
+{% from "includes/_formHelper.html" import render_user_form %}
+{% from "includes/_rowHelper.html" import middle_column %}
+
+{% set active_page="profile" %}
+
+{% block content %}
+    {% call middle_column() %}
+        {{ render_user_form(form, "Update Profile") }}
+    {% endcall %}
+    {% call middle_column(row_classes=["mt-3"]) %}
+        <a href="{{ url_for("profile") }}">Cancel</a>
+    {% endcall %}
+{% endblock %}
